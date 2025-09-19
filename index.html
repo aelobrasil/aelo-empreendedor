@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conheça e Divulgar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        .section {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+            min-height: calc(100vh - 4rem);
+        }
+        .scroll-button {
+            transition: transform 0.2s ease-in-out;
+        }
+        .scroll-button:hover {
+            transform: translateY(-2px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        .copy-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <header class="bg-white shadow-lg fixed top-0 left-0 w-full z-10 p-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 class="text-2xl font-bold text-gray-900">Aelo do Brasil</h1>
+            <nav class="space-x-4">
+                <button id="back-btn" class="hidden scroll-button px-4 py-2 rounded-full bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                    Voltar
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <section id="main-content" class="section bg-white flex items-center justify-center">
+        </section>
+
+    <a href="https://wa.me/5514981150675" target="_blank" class="fixed bottom-4 right-4 z-20 px-6 py-3 rounded-full bg-green-500 text-white font-bold shadow-lg hover:bg-green-600 transition duration-300 flex items-center justify-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.04 2C7.03 2 3 6.04 3 11.04c0 1.79.52 3.5 1.48 4.96L3.18 19.82l4.13-1.08a9.04 9.04 0 0 0 4.73 1.29c5.01 0 9.04-4.04 9.04-9.04C21.08 6.04 17.05 2 12.04 2zM12.04 17.5c-1.42 0-2.8-.52-3.86-1.56l-.28-.2c-.41-.41-.95-.62-1.5-.62-.55 0-1.1.21-1.5.62l-.28.2a1.53 1.53 0 0 1-1.22 2.65l.55.14 1.57.41c.28.07.56.1.84.1.33 0 .67-.03 1.01-.1a6.5 6.5 0 0 0 5.86-1.59l.06-.06a6.5 6.5 0 0 0 1.94-4.66c0-1.3-.52-2.58-1.5-3.56a6.47 6.47 0 0 0-4.66-1.5c-1.3 0-2.58.52-3.56 1.5a6.47 6.47 0 0 0-1.5 4.66c0 1.3.52 2.58 1.5 3.56zM15.02 12.02c.28-.28.28-.76 0-1.04L12.06 8c-.28-.28-.76-.28-1.04 0s-.28.76 0 1.04l2.5 2.5a.75.75 0 0 0 1.04 0z"/>
+        </svg>
+        <span>Fale Conosco</span>
+    </a>
+
+    <div id="pixModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-4">Finalizar Pagamento</h3>
+            <p class="text-lg mb-4">Para prosseguir, realize o pagamento de R$ 29,90 via PIX para o **Plano em Fila**.</p>
+            <div class="bg-gray-100 p-4 rounded-lg mb-4 text-center">
+                <p class="text-sm font-semibold text-gray-700">Chave PIX (CNPJ):</p>
+                <p id="pixKey" class="text-xl font-bold text-gray-900 break-all">60.676.425/0001-47</p>
+                <p class="text-sm font-semibold text-gray-700 mt-1">Banco Inter Conta MEI</p>
+                <button id="copyPixBtn" class="mt-4 px-4 py-2 rounded-full bg-black text-white font-medium hover:bg-gray-800 transition duration-300 copy-button">
+                    Copiar Chave
+                </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">Após o pagamento, clique no botão abaixo para nos enviar o comprovante via WhatsApp e finalizar sua divulgação.</p>
+            <button id="whatsappRedirectBtn" class="w-full py-3 px-4 rounded-full bg-green-500 text-white font-semibold shadow-lg hover:bg-green-600 transition duration-300">
+                Abrir WhatsApp para Finalizar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const mainContent = document.getElementById('main-content');
+        const backBtn = document.getElementById('back-btn');
+        const pixModal = document.getElementById('pixModal');
+        const copyPixBtn = document.getElementById('copyPixBtn');
+        const whatsappRedirectBtn = document.getElementById('whatsappRedirectBtn');
+        let formData = {};
+
+        const welcomeContentHTML = `
+            <div class="text-center">
+                <h2 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">Olá, Empresário!</h2>
+                <p class="text-xl md:text-2xl opacity-90 mb-8">Bem-vindo à Aelo</p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <button id="conheca-welcome-btn" class="px-8 py-4 rounded-full bg-black text-white font-bold shadow-lg hover:bg-gray-800 transition duration-300">
+                        Conheça
+                    </button>
+                    <button id="divulgar-welcome-btn" class="px-8 py-4 rounded-full bg-gray-200 text-gray-900 font-bold hover:bg-gray-300 transition duration-300">
+                        Divulgar
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const conhecaContentHTML = `
+            <div class="container mx-auto max-w-4xl px-4">
+                <h2 class="text-4xl font-bold text-center mb-8">Conheça o Projeto</h2>
+                <div class="prose max-w-none">
+                    <p class="text-lg leading-relaxed mb-4">
+                        Por que divulgar sua empresa com a AELO é diferente de carros de som, rádios e panfletos?
+                    </p>
+                    <p class="text-lg leading-relaxed mb-4">
+                        Nos meios tradicionais, como rádios, carros de som ou panfletos, sua empresa compete com várias mensagens ao mesmo tempo e o cliente decide em apenas 3 segundos se ela é interessante ou não. Muitas vezes, a atenção é perdida e o investimento não gera retorno real.
+                    </p>
+                    <p class="text-lg leading-relaxed font-bold mb-2">Com a AELO, sua marca sai do digital e do tradicional e chega de forma ativa às ruas:</p>
+                    <ul class="list-disc list-inside text-lg leading-relaxed space-y-2 mb-4">
+                        <li>Áudio veiculado por ciclistas ou motociclistas durante todo o dia, percorrendo bairros estratégicos da cidade;</li>
+                        <li>Você escolhe como quer aparecer:
+                            <ul class="list-none ml-6 mt-2 space-y-1">
+                                <li>Plano em Fila (R$ 29,90/dia): sua mensagem entra na sequência com outros áudios e é veiculada ao longo do dia.</li>
+                                <li>Plano Particular (R$ 69,90/dia): exclusividade total, apenas o áudio da sua empresa circula durante todo o dia.</li>
+                            </ul>
+                        </li>
+                        <li>Mensagens de até 30 segundos: direto ao ponto, fáceis de gravar e sem necessidade de contratar locutores.</li>
+                        <li>Custo-benefício imbatível: sua marca ganha presença diária nas ruas sem os altos custos da mídia digital ou impressa.</li>
+                        <li>Impacto real: o público escuta sua mensagem repetidamente nos bairros por onde passamos, garantindo fixação da sua marca.</li>
+                    </ul>
+                    <p class="text-lg leading-relaxed">
+                        A AELO eleva sua marca para todos os cantos da cidade, garantindo que seu negócio seja ouvido e lembrado, superando as limitações da publicidade tradicional.
+                    </p>
+                </div>
+            </div>
+        `;
+
+        const termsContentHTML = `
+            <div class="container mx-auto max-w-4xl px-4 text-justify">
+                <h2 class="text-4xl font-bold text-center mb-8">Termos e Condições de Uso – AELO</h2>
+                <div class="prose max-w-none text-gray-800">
+                    <p class="text-sm leading-relaxed mb-2">Última atualização: 20 de setembro de 2025</p>
+                    <p class="text-sm leading-relaxed mb-4">Bem-vindo à AELO – Sua voz em movimento. Ao contratar e utilizar nossos serviços de divulgação sonora, o empresário/cliente concorda automaticamente com os presentes Termos e Condições de Uso.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">1. Sobre o serviço</h3>
+                    <p class="text-sm leading-relaxed mb-4">A AELO realiza divulgação sonora em bicicletas e motos equipadas com alto-falantes, percorrendo bairros definidos pela empresa. O cliente pode escolher em qual bairro deseja veicular sua mensagem. Os áudios passam por moderação prévia, para garantir qualidade, clareza e adequação ao público. Ao final de cada mensagem, será incluído o nome e o slogan da empresa: “AELO – Sua voz em movimento”.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">2. Envio e aprovação de áudios</h3>
+                    <p class="text-sm leading-relaxed mb-4">O cliente é responsável por enviar o áudio da mensagem e o comprovante de pagamento via WhatsApp, conforme instruções fornecidas pela AELO. Mensagens que contenham conteúdo ofensivo, ilegal, discriminatório, político-partidário ou que violem direitos de terceiros não serão veiculadas. A aprovação da AELO é condição necessária para a mensagem ir às ruas.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">3. Planos e condições comerciais</h3>
+                    <p class="text-sm leading-relaxed mb-4">A veiculação é realizada em fila de mensagens por bairro, conforme ordem de solicitação e disponibilidade. Caso o cliente deseje exclusividade de veiculação em um dia, poderá optar pelo Plano Particular, no valor de R$ 69,90 por dia, garantindo que apenas a sua mensagem seja transmitida naquele bairro. Os valores pagos não são reembolsáveis em caso de desistência após a confirmação da solicitação.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">4. Responsabilidade do cliente</h3>
+                    <p class="text-sm leading-relaxed mb-4">Garantir que o áudio enviado seja de sua autoria ou que possua os direitos necessários para utilizá-lo. Assumir total responsabilidade pelo conteúdo divulgado em seu nome. Utilizar os serviços da AELO apenas para fins legais e éticos.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">5. Responsabilidade da AELO</h3>
+                    <p class="text-sm leading-relaxed mb-4">Garantir a execução da divulgação conforme os planos contratados. Manter a ordem de fila e respeitar o bairro escolhido pelo cliente. Moderar os áudios antes da veiculação, zelando pela qualidade do serviço e pelo respeito à comunidade. A AELO não se responsabiliza por interpretações do público sobre as mensagens ou por resultados comerciais decorrentes da divulgação.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">6. Limitações de uso</h3>
+                    <p class="text-sm leading-relaxed mb-2">É proibido utilizar os serviços da AELO para:</p>
+                    <ul class="list-disc list-inside text-sm leading-relaxed space-y-1 ml-4">
+                        <li>Propaganda enganosa ou fraudulenta;</li>
+                        <li>Mensagens de ódio, preconceito, difamação ou apologia a crimes;</li>
+                        <li>Campanhas políticas, religiosas ou ideológicas sem autorização expressa da AELO;</li>
+                        <li>Conteúdo que infrinja leis ou direitos autorais.</li>
+                    </ul>
+                    <p class="text-sm leading-relaxed mt-2 mb-4">Mensagens que violem essas regras poderão ser recusadas ou suspensas sem direito a reembolso.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">7. Privacidade e dados</h3>
+                    <p class="text-sm leading-relaxed mb-4">As informações fornecidas no cadastro (como nome, empresa e contatos) serão utilizadas exclusivamente para controle interno e prestação do serviço. A AELO se compromete a não compartilhar dados pessoais com terceiros sem autorização, exceto quando exigido por lei.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">8. Alterações nos termos</h3>
+                    <p class="text-sm leading-relaxed mb-4">A AELO poderá atualizar estes Termos e Condições a qualquer momento. A versão mais recente estará sempre disponível em nossos canais oficiais.</p>
+                    <h3 class="text-xl font-bold mt-6 mb-2">9. Aceite dos termos</h3>
+                    <p class="text-sm leading-relaxed mb-4">Ao confirmar a solicitação e enviar seu áudio, o cliente declara estar ciente e de acordo com todas as regras aqui descritas.</p>
+                    <p class="text-sm font-bold mt-8 text-center">AELO – Sua voz em movimento.</p>
+                </div>
+                <div class="flex justify-center mt-8">
+                    <button id="accept-terms-btn" class="px-8 py-4 rounded-full bg-black text-white font-bold shadow-lg hover:bg-gray-800 transition duration-300">
+                        Aceitar e Continuar
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const divulgarContentHTML = `
+            <div class="container mx-auto max-w-4xl px-4">
+                <h2 class="text-4xl font-bold text-center mb-8">Divulgue sua Empresa com a Aelo</h2>
+                <div class="bg-white p-8 rounded-lg shadow-xl max-w-lg mx-auto">
+                    <p class="text-lg leading-relaxed mb-6 text-center">
+                        Preencha o formulário abaixo para entrar em contato com a AELO e divulgar sua empresa.
+                    </p>
+                    <form id="divulgar-form" class="space-y-4">
+                        <div>
+                            <label for="nomeEmpresa" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+                            <input type="text" id="nomeEmpresa" name="nomeEmpresa" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="nomeResponsavel" class="block text-sm font-medium text-gray-700">Nome do Responsável</label>
+                            <input type="text" id="nomeResponsavel" name="nomeResponsavel" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="cnpj" class="block text-sm font-medium text-gray-700">CNPJ da Empresa</label>
+                            <input type="text" id="cnpj" name="cnpj" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="endereco" class="block text-sm font-medium text-gray-700">Endereço da Empresa</label>
+                            <input type="text" id="endereco" name="endereco" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="categoria" class="block text-sm font-medium text-gray-700">Categoria (ex: Restaurante, Loja)</label>
+                            <input type="text" id="categoria" name="categoria" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="bairros" class="block text-sm font-medium text-gray-700">Bairros de Interesse</label>
+                            <input type="text" id="bairros" name="bairros" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <div>
+                            <label for="whatsapp" class="block text-sm font-medium text-gray-700">WhatsApp</label>
+                            <input type="tel" id="whatsapp" name="whatsapp" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900">
+                        </div>
+                        <button type="submit" class="w-full py-3 px-4 bg-black text-white font-semibold rounded-md shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">
+                            Entrar em Contato via WhatsApp
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `;
+
+        function showWelcome() {
+            mainContent.innerHTML = welcomeContentHTML;
+            backBtn.classList.add('hidden');
+            backBtn.classList.remove('block');
+            
+            document.getElementById('conheca-welcome-btn').addEventListener('click', showConheca);
+            document.getElementById('divulgar-welcome-btn').addEventListener('click', showTerms);
+        }
+
+        function showConheca() {
+            mainContent.innerHTML = conhecaContentHTML;
+            backBtn.classList.add('block');
+            backBtn.classList.remove('hidden');
+        }
+
+        function showTerms() {
+            mainContent.innerHTML = termsContentHTML;
+            backBtn.classList.add('block');
+            backBtn.classList.remove('hidden');
+
+            document.getElementById('accept-terms-btn').addEventListener('click', showDivulgarForm);
+        }
+
+        function showDivulgarForm() {
+            mainContent.innerHTML = divulgarContentHTML;
+            backBtn.classList.add('block');
+            backBtn.classList.remove('hidden');
+            
+            const form = document.getElementById('divulgar-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                formData = {
+                    nomeEmpresa: document.getElementById('nomeEmpresa').value,
+                    nomeResponsavel: document.getElementById('nomeResponsavel').value,
+                    cnpj: document.getElementById('cnpj').value,
+                    endereco: document.getElementById('endereco').value,
+                    categoria: document.getElementById('categoria').value,
+                    bairros: document.getElementById('bairros').value,
+                    whatsapp: document.getElementById('whatsapp').value
+                };
+
+                // Show PIX modal and set up the WhatsApp redirect
+                pixModal.style.display = 'flex';
+            });
+        }
+
+        function redirectToWhatsapp() {
+            const message = `Olá, AELO! Meu nome é ${formData.nomeResponsavel} e estou interessado em divulgar minha empresa, a ${formData.nomeEmpresa}, CNPJ ${formData.cnpj}, localizada em ${formData.endereco}. A categoria do meu negócio é ${formData.categoria} e meus bairros de interesse são ${formData.bairros}. Meu número de WhatsApp é ${formData.whatsapp}. Acabei de realizar o pagamento para o Plano em Fila.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            
+            const whatsappUrl = `https://wa.me/5514981150675?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            pixModal.style.display = 'none';
+        }
+        
+        // Exibe o conteúdo de "Olá, empreendedor" por padrão
+        document.addEventListener('DOMContentLoaded', () => {
+            showWelcome();
+        });
+
+        // Adiciona listeners aos botões
+        backBtn.addEventListener('click', showWelcome);
+
+        // PIX modal listeners
+        copyPixBtn.addEventListener('click', () => {
+            const pixKey = document.getElementById('pixKey').innerText;
+            
+            // Crie um elemento de área de texto temporário
+            const tempInput = document.createElement('textarea');
+            tempInput.value = pixKey;
+            document.body.appendChild(tempInput);
+            
+            // Selecione e copie o texto
+            tempInput.select();
+            document.execCommand('copy');
+            
+            // Remova o elemento temporário
+            document.body.removeChild(tempInput);
+
+            copyPixBtn.innerText = 'Copiado!';
+            setTimeout(() => {
+                copyPixBtn.innerText = 'Copiar Chave';
+            }, 2000);
+        });
+
+        whatsappRedirectBtn.addEventListener('click', redirectToWhatsapp);
+    </script>
+</body>
+</html>
+```eof
