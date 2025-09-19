@@ -80,7 +80,7 @@
     <section id="main-content" class="section bg-white flex items-center justify-center">
         </section>
 
-    <div class="fixed bottom-4 right-4 z-20 flex flex-col items-end space-y-2">
+    <div id="floating-buttons" class="fixed bottom-4 right-4 z-20 flex flex-col items-end space-y-2">
         <a href="https://wa.me/5514981150675" target="_blank" class="px-6 py-3 rounded-full bg-green-500 text-white font-bold shadow-lg hover:bg-green-600 transition duration-300 flex items-center justify-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.04 2C7.03 2 3 6.04 3 11.04c0 1.79.52 3.5 1.48 4.96L3.18 19.82l4.13-1.08a9.04 9.04 0 0 0 4.73 1.29c5.01 0 9.04-4.04 9.04-9.04C21.08 6.04 17.05 2 12.04 2zM12.04 17.5c-1.42 0-2.8-.52-3.86-1.56l-.28-.2c-.41-.41-.95-.62-1.5-.62-.55 0-1.1.21-1.5.62l-.28.2a1.53 1.53 0 0 1-1.22 2.65l.55.14 1.57.41c.28.07.56.1.84.1.33 0 .67-.03 1.01-.1a6.5 6.5 0 0 0 5.86-1.59l.06-.06a6.5 6.5 0 0 0 1.94-4.66c0-1.3-.52-2.58-1.5-3.56a6.47 6.47 0 0 0-4.66-1.5c-1.3 0-2.58.52-3.56 1.5a6.47 6.47 0 0 0-1.5 4.66c0 1.3.52 2.58 1.5 3.56zM15.02 12.02c.28-.28.28-.76 0-1.04L12.06 8c-.28-.28-.76-.28-1.04 0s-.28.76 0 1.04l2.5 2.5a.75.75 0 0 0 1.04 0z"/>
@@ -119,6 +119,7 @@
         const mainContent = document.getElementById('main-content');
         const backBtn = document.getElementById('back-btn');
         const pixModal = document.getElementById('pixModal');
+        const floatingButtons = document.getElementById('floating-buttons'); // Novo
         const copyPixBtn = document.getElementById('copyPixBtn');
         const whatsappRedirectBtn = document.getElementById('whatsappRedirectBtn');
         let formData = {};
@@ -253,11 +254,22 @@
             </div>
         `;
 
+        function toggleFloatingButtons(show) {
+            if (show) {
+                floatingButtons.classList.remove('hidden');
+                floatingButtons.classList.add('flex');
+            } else {
+                floatingButtons.classList.add('hidden');
+                floatingButtons.classList.remove('flex');
+            }
+        }
+
         function showWelcome() {
             mainContent.innerHTML = welcomeContentHTML;
             backBtn.classList.add('hidden');
             backBtn.classList.remove('block');
-            
+            toggleFloatingButtons(true); // Mostrar botões
+
             document.getElementById('conheca-welcome-btn').addEventListener('click', showConheca);
             document.getElementById('divulgar-welcome-btn').addEventListener('click', showTerms);
         }
@@ -266,12 +278,14 @@
             mainContent.innerHTML = conhecaContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
+            toggleFloatingButtons(false); // Esconder botões
         }
 
         function showTerms() {
             mainContent.innerHTML = termsContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
+            toggleFloatingButtons(false); // Esconder botões
 
             document.getElementById('accept-terms-btn').addEventListener('click', showDivulgarForm);
         }
@@ -280,6 +294,7 @@
             mainContent.innerHTML = divulgarContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
+            toggleFloatingButtons(false); // Esconder botões
             
             const form = document.getElementById('divulgar-form');
             form.addEventListener('submit', function(event) {
