@@ -119,7 +119,7 @@
         const mainContent = document.getElementById('main-content');
         const backBtn = document.getElementById('back-btn');
         const pixModal = document.getElementById('pixModal');
-        const floatingButtons = document.getElementById('floating-buttons'); // Novo
+        const floatingButtons = document.getElementById('floating-buttons');
         const copyPixBtn = document.getElementById('copyPixBtn');
         const whatsappRedirectBtn = document.getElementById('whatsappRedirectBtn');
         let formData = {};
@@ -268,7 +268,7 @@
             mainContent.innerHTML = welcomeContentHTML;
             backBtn.classList.add('hidden');
             backBtn.classList.remove('block');
-            toggleFloatingButtons(true); // Mostrar botões
+            toggleFloatingButtons(true);
 
             document.getElementById('conheca-welcome-btn').addEventListener('click', showConheca);
             document.getElementById('divulgar-welcome-btn').addEventListener('click', showTerms);
@@ -278,14 +278,14 @@
             mainContent.innerHTML = conhecaContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
-            toggleFloatingButtons(false); // Esconder botões
+            toggleFloatingButtons(false);
         }
 
         function showTerms() {
             mainContent.innerHTML = termsContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
-            toggleFloatingButtons(false); // Esconder botões
+            toggleFloatingButtons(false);
 
             document.getElementById('accept-terms-btn').addEventListener('click', showDivulgarForm);
         }
@@ -294,7 +294,7 @@
             mainContent.innerHTML = divulgarContentHTML;
             backBtn.classList.add('block');
             backBtn.classList.remove('hidden');
-            toggleFloatingButtons(false); // Esconder botões
+            toggleFloatingButtons(false);
             
             const form = document.getElementById('divulgar-form');
             form.addEventListener('submit', function(event) {
@@ -316,7 +316,20 @@
         }
 
         function redirectToWhatsapp() {
-            const message = `Olá, AELO! Meu nome é ${formData.nomeResponsavel} e estou interessado em divulgar minha empresa, a ${formData.nomeEmpresa}, CNPJ ${formData.cnpj}, localizada em ${formData.endereco}. A categoria do meu negócio é ${formData.categoria} e meus bairros de interesse são ${formData.bairros}. Meu número de WhatsApp é ${formData.whatsapp}. Acabei de realizar o pagamento para o Plano em Fila.`;
+            const message = `Olá, AELO! 👋
+
+Gostaria de solicitar a divulgação da minha empresa.
+Aqui estão os detalhes:
+
+⚫ Nome da Empresa: ${formData.nomeEmpresa}
+⚫ Nome do Responsável: ${formData.nomeResponsavel}
+⚫ CNPJ: ${formData.cnpj}
+⚫ Endereço: ${formData.endereco}
+⚫ Categoria: ${formData.categoria}
+⚫ Bairros de Interesse: ${formData.bairros}
+⚫ WhatsApp: ${formData.whatsapp}
+
+Acabei de realizar o pagamento para o Plano em Fila. ✅`;
             
             const encodedMessage = encodeURIComponent(message);
             
